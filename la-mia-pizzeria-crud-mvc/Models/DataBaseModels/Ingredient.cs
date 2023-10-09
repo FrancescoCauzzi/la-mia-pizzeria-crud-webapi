@@ -16,7 +16,7 @@ namespace la_mia_pizzeria_crud_mvc.Models.DataBaseModels
         public string Name { get; set; }
 
         [JsonIgnore]
-        public List<Pizza> Pizzas { get; set; }
+        public List<Pizza>? Pizzas { get; set; }
 
         // Empty constructor necessary to EF
         public Ingredient() { 
