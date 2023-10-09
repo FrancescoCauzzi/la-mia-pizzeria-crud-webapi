@@ -1,0 +1,227 @@
+
+$linear-gradient: linear-gradient(to right, #7ad15d, white, #a80706);
+$primary: #a6704f;
+$primary-lighter: #ffb479;
+$danger: #a80706;
+$info: #7ad15d;
+$text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 2px 2px 0 #000;
+
+@mixin cover-properties {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50px;
+    border: 2px solid $info;
+}
+
+@mixin text-font {
+    color: #ffb479;
+    text-shadow: $text-shadow;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+html {
+    font-size: 14px;
+
+    @media (min-width: 768px) {
+        font-size: 16px;
+    }
+
+    position: relative;
+    min-height: 100%;
+    z-index: 0;
+
+    label {
+        color: $primary-lighter;
+        //text-shadow: $text-shadow;
+    }
+
+
+    .btn-primary {
+        background-color: $primary !important;
+        border-color: black !important;
+    }
+
+    .btn-danger {
+        background-color: $danger !important;
+        border-color: black !important;
+    }
+
+    .btn-info {
+        background-color: $info !important;
+        border-color: #4d843a !important;
+    }
+
+    body {
+        margin-bottom: 60px;
+
+
+        .__header {
+            position: fixed;
+            z-index: 2;
+            width: 100%;
+            background-color: black;
+
+            .__logo-ctn {
+                height: 50px;
+                width: 50px;
+
+                img {
+                    @include cover-properties;
+                    animation: spin 8s linear infinite;
+                }
+            }
+
+            a {
+                color: white;
+            }
+
+            .__navbar-toggler,
+            .__navbar-toggler-icon {
+                background-color: gray;
+            }
+        }
+
+        main {
+            //background-color: #862b2b;
+            min-height: 93vh;
+            padding-top: 65px;
+            padding-bottom: 40px;
+            background-size: contain;
+            background-image: url(/images/background-cool.png);
+            background-repeat: repeat;
+
+
+            .__main-sub-ctn {
+                height: 100%;
+                width: 100%;
+
+                h1, h2, h3, h4 {
+                    color: #ffb479;
+                    text-shadow: $text-shadow;
+                }
+
+                .__login-ctn, .__register-ctn {
+                    ///////
+                    a, p {
+                        text-decoration: none;
+                        @include text-font;
+                    }
+                }
+
+                .__home-ctn {
+                    .__home-logo-ctn {
+                        height: 100px;
+
+                        img {
+                            @include cover-properties;
+                        }
+                    }
+
+                    .__home-imgs-ctn {
+                        width: 100%;
+
+
+                        .__home-slide {
+                            width: 600px;
+                            height: 505px;
+                            display: none;
+
+                            img {
+                                @include cover-properties;
+                                border: 3px solid #be7553;
+                            }
+                        }
+
+                        .__home-slide.__active {
+                            display: block;
+                        }
+                    }
+                }
+
+                .__pizza-index {
+                    .__pizza-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 15px;
+
+                        .__pizza-card {
+                            min-width: 250px;
+                            width: calc(100% / 5 * 1 - (15px / 6 * 5));
+                            background: $linear-gradient;
+
+
+                            img {
+                                width: 100%;
+                                height: 250px;
+                                object-fit: cover;
+                            }
+                        }
+                    }
+
+                    .__pizza-index-go-back-button {
+                        padding-top: 10px;
+                    }
+                }
+
+                .__pizza-details-ctn {
+                    .__pizza-details-card {
+                        width: 500px;
+                        min-width: 250px;
+                        position: relative;
+
+                        .__image-det-ctn {
+                            width: 100%;
+                        }
+
+                        .__written-details {
+                            background: $linear-gradient;
+                            width: 100%;
+                            
+                            font-weight:600;
+                            
+
+                        }
+                    }
+
+                    .__detail-btn-ctn {
+                        position: absolute;
+                        top: 2px;
+                        right: 4px;
+                    }
+                }
+
+                .__create-form-ctn, .__update-form-ctn {
+                    label {
+                        text-shadow: $text-shadow;
+                    }
+                }
+
+                .__go-back-btns-ctn {
+                    min-width: 250px;
+                }
+            }
+        }
+
+
+        .__footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 7vh;
+            white-space: nowrap;
+            line-height: 60px;
+            z-index: 2;
+            background-color: black;
+        }
+    }
+}

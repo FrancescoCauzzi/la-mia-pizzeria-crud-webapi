@@ -1,0 +1,22 @@
+{
+  "name": "la-mia-pizzeria-crud-mvc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp compileSass && gulp watchSass"
+  },
+  "overrides": {
+    "glob-parent": "^6.0.2",
+    "chokidar": "3.5.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.29.3",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.68.0"
+  }
+}

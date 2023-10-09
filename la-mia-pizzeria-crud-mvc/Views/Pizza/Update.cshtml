@@ -1,0 +1,22 @@
+﻿@using la_mia_pizzeria_crud_mvc.Models.DataBaseModels
+@{
+
+    @model PizzaFormModel
+    ViewData["Title"] = $"Update {@Model.Pizza.Name}";
+
+}
+
+<div class="__update-form-ctn">
+    <div class="__post-form-ctn d-flex flex-column">
+        <h1>Edit @Model.Pizza.Name</h1>
+
+        <form asp-controller="Pizza" asp-action="Update" asp-route-id="@Model.Pizza.Id" method="post">
+            @* common part *@
+            @await Html.PartialAsync("InnerFormCreateUpdate")
+            
+        </form>
+        @await Html.PartialAsync("GoBackButtonsPartial")
+
+    </div>
+</div>
+

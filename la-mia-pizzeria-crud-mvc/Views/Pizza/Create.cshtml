@@ -1,0 +1,20 @@
+﻿@using la_mia_pizzeria_crud_mvc.Models.DataBaseModels
+@{
+    ViewData["Title"] = "Insert New Pizza";
+
+    @model PizzaFormModel
+}
+
+<div class="__create-form-ctn">
+    <div class="__post-form-ctn d-flex flex-column">
+        <h1>Insert a new pizza</h1>
+        <form asp-controller="Pizza" asp-action="Create" method="post">
+        @* common part *@
+        @await Html.PartialAsync("InnerFormCreateUpdate")            
+        </form>
+        @await Html.PartialAsync("GoBackButtonsPartial")
+
+
+    </div>
+
+</div>

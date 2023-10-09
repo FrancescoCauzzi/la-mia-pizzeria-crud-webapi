@@ -1,0 +1,80 @@
+@using la_mia_pizzeria_crud_mvc.Models.DataBaseModels
+@{
+ViewData["Title"] = Model.Name;
+
+@model Pizza
+}
+
+
+
+<div class="__pizza-details-ctn container d-flex flex-column align-items-center">
+    <h1 class=" card-title mb-1">@Model.Name</h1>
+    <div class="__pizza-details-card card d-flex flex-column align-items-center">
+
+        <div class="__image-det-ctn">
+            <img class="card-img-top" src='@Model.ImageUrl' alt="Pizza image">
+
+        </div>
+        <div class="__written-details card-body text-center px-5">            
+            <p class="card-text">@Model.Description</p>
+            <div class=" d-flex flex-column">
+                <div class="d-flex justify-content-around">
+                    @*Price*@
+                    <p class="card-text"><strong>Price: </strong>@Model.Price €</p> 
+                    @*Category*@         
+                    <p>
+                        <strong>Category:</strong>
+                        @if (Model.PizzaCategory != null)
+                        {
+                            <span>@Model.PizzaCategory.Name</span>
+                        }
+                        else
+                        {
+                            <span>No category available</span>
+                        }
+                    </p>             
+                </div>
+                <div>
+                    @*Ingredients*@
+                    <div class="__details-ingredients d-flex justify-content-evenly">
+                        <div>
+                            <strong>Igredients:</strong>
+
+                        </div>
+                        <div>
+                            @if (Model.Ingredients != null && Model.Ingredients.Count > 0)
+                            {
+                                <ul>
+                                    @foreach (Ingredient igredient in Model.Ingredients)
+                                    {
+                                        <li>@igredient.Name</li>
+                                    }
+                                </ul>
+                            } else
+                            {
+                                <span>No ingredients have been associated</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (User.IsInRole("ADMIN"))
+            {
+                
+            <div class="__detail-btn-ctn d-flex gap-2 ">                
+                                                                     
+                <a  href="@Url.Action("Update", "Pizza", new { name = Model.Name })" class="btn btn-primary p-2 __edit-icon">
+                    <i class=" fa-regular fa-pen-to-square"></i>
+                </a>
+
+                @await Html.PartialAsync("DeleteFormPartial")
+                                       
+            </div>                        
+            }
+        </div>  
+        
+    </div>
+    @await Html.PartialAsync("GoBackButtonsPartial")
+
+
+</div>

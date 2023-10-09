@@ -1,0 +1,105 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="__home-ctn container-fluid text-center d-flex justify-content-center flex-column gap-4 ">
+    <div class="d-flex justify-content-center align-items-center gap-3">
+        <h1 class="">Pizzeria Bella Italia</h1>
+        <div class="__home-logo-ctn">
+            <img class="__logo" src="~/images/background_dalle.png" alt="Logo">
+        </div>
+
+    </div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (User.IsInRole("ADMIN"))
+        {
+            <h3>@UserManager.GetUserName(User), Admin, you are logged in!</h3>
+        }
+        else
+        {
+            <h3>@UserManager.GetUserName(User), Regular User, you are logged in!</h3>
+
+
+        }
+
+    }
+    <h4>St. Andrews Street 23456-YOB, London, UK </h4>        
+    <div class="__home-imgs-ctn d-flex justify-content-center flex-wrap">
+        <div id="__slider-container"></div>
+    </div>
+    <div class="">
+        <partial name="_LoginHomePartial" />
+    </div>
+    
+</div>
+<script>
+
+    const slidesData = [
+        { src: '/images/restaurant1.png', alt: 'no image' },
+        { src: '/images/background2.jpg', alt: '' },
+        { src: '/images/restaurant2.png', alt: '' },
+        { src: '/images/background_image.jpg', alt: '' },
+        { src: '/images/backgorund1.jpg', alt: '' },
+        { src: '/images/italian_flag.png', alt: '' },
+        { src: '/images/monalisa.jpg', alt: '' }
+
+    ];
+
+    let slidesHTML = '';
+
+    slidesData.forEach((slide, index) => {
+        const activeClass = index === 0 ? ' __active' : '';  // Add the __active class to the first slide
+        slidesHTML += `
+            <div class="__home-slide${activeClass}">
+                <img src="${slide.src}" alt="${slide.alt}" srcset="">
+            </div>
+        `;
+    });
+
+    // Now slidesHTML contains the HTML for all the slides
+
+    document.getElementById('__slider-container').innerHTML = slidesHTML;
+
+
+
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.__home-slide');
+
+    // Define the function to cycle to the next slide
+    function nextSlide() {
+        // Remove the active class from the current slide
+        slides[currentSlideIndex].classList.remove('__active');
+
+        // Move to the next slide, or loop back to the start
+        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+
+        // Add the active class to the new current slide
+        slides[currentSlideIndex].classList.add('__active');
+    }
+
+    // Define an async function to start the slide show
+    async function startSlideShow(interval) {
+        return new Promise((resolve) => {
+            const slideInterval = setInterval(() => {
+                nextSlide();
+            }, interval);
+
+            // This will clear the interval and resolve the promise after 20 seconds
+            /*
+            setTimeout(() => {
+                clearInterval(slideInterval);
+                resolve('Slide show ended');
+            }, 200000);
+            */
+        });
+    }
+
+    // Call the async function, passing 2000ms (2 seconds) as the interval
+    startSlideShow(5000).then(console.log);
+
+</script>
