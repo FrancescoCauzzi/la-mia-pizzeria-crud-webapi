@@ -15,6 +15,7 @@ namespace la_mia_pizzeria_crud_mvc.Models.DataBaseModels
         [MaxLength(100, ErrorMessage = $"The name must not exceed 100 characters")]
         public string Name { get; set; }
 
+        // Remember here the '?' after the List declaration
         [JsonIgnore]
         public List<Pizza>? Pizzas { get; set; }
 
