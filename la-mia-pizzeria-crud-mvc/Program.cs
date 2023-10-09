@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace la_mia_pizzeria_crud_mvc
 {
@@ -24,10 +25,14 @@ namespace la_mia_pizzeria_crud_mvc
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            
-            // Dependency Injection File Logger
+
+            // this setting helps in avoiding infinite loops during JSON serialization when there are circular references in your data structures, which is a common scenario when you have related entities in your models. (N:N, 1:N relationships)
+            builder.Services.AddControllers().AddJsonOptions(x =>
+                            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+            // Dependency Injection File Logger, when a generic controller expects an object that implement an ICustomLogger interface I give it my CustomFileLogger
             builder.Services.AddScoped<ICustomLogger, CustomFileLogger>();
-            // Dependency Injection DatabaseContext
+            // Dependency Injection DatabaseContext, whenever a generic controller expects an objects called PizzeriaContext I give it my PizzeriaContext, so that the object controller will be initialized with the PizzeriaContext (and all its related properties and methods) automatically
             builder.Services.AddScoped<PizzeriaContext, PizzeriaContext>();
 
             var app = builder.Build();
