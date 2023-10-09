@@ -123,7 +123,7 @@ namespace la_mia_pizzeria_crud_mvc.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    // first try //////////////////////////////////
+                    // first try /////////////////////////////////
                     // Check if the role exists, create if not
                     if (!await _roleManager.RoleExistsAsync("USER"))
                     {
