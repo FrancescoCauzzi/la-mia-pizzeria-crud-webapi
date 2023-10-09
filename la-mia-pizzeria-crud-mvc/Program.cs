@@ -12,7 +12,7 @@ namespace la_mia_pizzeria_crud_mvc
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-                        var connectionString = builder.Configuration.GetConnectionString("PizzeriaContextConnection") ?? throw new InvalidOperationException("Connection string 'PizzeriaContextConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("PizzeriaContextConnection") ?? throw new InvalidOperationException("Connection string 'PizzeriaContextConnection' not found.");
 
             builder.Services.AddDbContext<PizzeriaContext>();
 
@@ -25,9 +25,9 @@ namespace la_mia_pizzeria_crud_mvc
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             
-            // Dependency Injection
+            // Dependency Injection File Logger
             builder.Services.AddScoped<ICustomLogger, CustomFileLogger>();
-            // Dependency Injection
+            // Dependency Injection DatabaseContext
             builder.Services.AddScoped<PizzeriaContext, PizzeriaContext>();
 
             var app = builder.Build();
