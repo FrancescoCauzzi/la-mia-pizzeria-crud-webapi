@@ -11,102 +11,120 @@ using Microsoft.EntityFrameworkCore;
 namespace la_mia_pizzeria_crud_mvc.Controllers.API
 {
     [Route("api/[controller]/[action]")]
-    [ApiController]
+    [ApiController]    
     public class PizzasController : ControllerBase
     {
-        private PizzeriaContext _myDb;
+        
+        private IRepositoryPizzas _repositoryPizzas;
 
         // Dependency Injection in the constructor
-        public PizzasController(PizzeriaContext myDb)
-        {            
-            _myDb = myDb;
+        public PizzasController(IRepositoryPizzas repositoryPizzas)
+        {                        
+            _repositoryPizzas = repositoryPizzas;
         }
         // get all pizzas with category and ingredients
         [HttpGet]
         public IActionResult GetPizzas()
         {
-            List<Pizza> pizzas = _myDb.Pizzas.Include(pizza => pizza.PizzaCategory).Include(pizza => pizza.Ingredients).ToList();
-            return Ok(pizzas);
+            try{
+
+                List<Pizza> pizzas = _repositoryPizzas.GetAllPizzas();
+                return Ok(pizzas);
+
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message); 
+            }
         }
         // search pizzas by string snippets in pizza name
         public IActionResult SearchPizzas(string? search)
         {
-            if (string.IsNullOrWhiteSpace(search))
-            {
-                return BadRequest(new { Message = "You did not insert any search string" });
+            try{
+                List<Pizza> foundPizzas = new();
+                if(search == null){
+                    foundPizzas = _repositoryPizzas.GetAllPizzas();
+                }else{
+                    foundPizzas = _repositoryPizzas.GetPizzasByName(search);
+                }          
+            
+                return Ok(foundPizzas);
+
+            }catch(Exception ex){
+                return BadRequest(ex.Message);
+
             }
-
-            List<Pizza> foundPizzas = _myDb.Pizzas
-                .Where(pizza => pizza.Name.ToLower().Contains(search.ToLower()))
-                .ToList();
-
-            return Ok(foundPizzas);
-
+            
         }
 
         // get pizza by id
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]        
         public IActionResult GetPizzaById(int id) {
-             
-            Pizza? pizza = _myDb.Pizzas.Where(p => p.Id == id).Include(p => p.PizzaCategory).Include(p => p.Ingredients).FirstOrDefault();
-            if (pizza != null)
-            {
-                return Ok(pizza);
+            try{
 
-            }
-            else
+                Pizza pizzaToGet = _repositoryPizzas.GetPizzaById(id);
+                if(pizzaToGet == null){
+                    return NotFound();             
+                }
+
+                return Ok(pizzaToGet);
+
+            }catch(Exception ex)
             {
-                return NotFound();
-            }
+                return BadRequest(ex.Message);
+            }                     
         }
 
         // here we start the POST requests
         // first create a new pizza
         [HttpPost]
-        public IActionResult Create([FromBody] Pizza newPizza) {
-            try
-            {
-            _myDb.Pizzas.Add(newPizza);
-            _myDb.SaveChanges();
-            return Ok();
+        public IActionResult Create([FromBody] PizzaFormModel newPizza) {
+            try{
+                bool result = _repositoryPizzas.AddPizza(newPizza);
+                if(!result){
+                    return BadRequest();
+                }
+                return Ok();
 
             }catch (Exception ex) { 
-                return BadRequest(new {Message = ex.Message});
+                return BadRequest(ex.Message);
             }
         }
         // modify a pizza
         [HttpPut("{id}")]
-        public IActionResult Modify(int id, [FromBody] Pizza updatedPizza)
+        public IActionResult Modify(int id, [FromBody] PizzaFormModel updatedPizza)
         {
-            Pizza? pizzaToModify = _myDb.Pizzas.Where(p => p.Id == id).FirstOrDefault();
+            try{
+                bool result = _repositoryPizzas.UpdatePizza(id, updatedPizza);
+                if(!result){
+                    return BadRequest();
+                }
 
-            if(pizzaToModify == null)
+                return Ok();
+
+            }catch(Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-            pizzaToModify.Name = updatedPizza.Name;
-            pizzaToModify.Description = updatedPizza.Description;
-            pizzaToModify.Price = updatedPizza.Price;
-            pizzaToModify.PizzaCategory = updatedPizza.PizzaCategory;
-            pizzaToModify.Ingredients = updatedPizza.Ingredients;
-            pizzaToModify.ImageUrl = updatedPizza.ImageUrl;
-            _myDb.SaveChanges();
-
-            return Ok();
         }
+        
         // delete a pizza
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Pizza? pizzaToDelete = _myDb.Pizzas.Where(p => p.Id == id).FirstOrDefault();
-            if(pizzaToDelete == null)
+            try
             {
-                return NotFound();
-            }
+                bool result = _repositoryPizzas.DeletePizza(id);
+                if(!result){
+                    return BadRequest();
+                }
 
-            _myDb.Pizzas.Remove(pizzaToDelete);
-            _myDb.SaveChanges();
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest(ex.Message);
+            }
         }
 
     }

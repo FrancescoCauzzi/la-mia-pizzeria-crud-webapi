@@ -34,6 +34,8 @@ namespace la_mia_pizzeria_crud_mvc
             builder.Services.AddScoped<ICustomLogger, CustomFileLogger>();
             // Dependency Injection DatabaseContext, whenever a generic controller expects an objects called PizzeriaContext I give it my PizzeriaContext, so that the object controller will be initialized with the PizzeriaContext (and all its related properties and methods) automatically
             builder.Services.AddScoped<PizzeriaContext, PizzeriaContext>();
+            // DI repository pattern
+            builder.Services.AddScoped<IRepositoryPizzas, RepositoryPizzas>();
 
             var app = builder.Build();
 

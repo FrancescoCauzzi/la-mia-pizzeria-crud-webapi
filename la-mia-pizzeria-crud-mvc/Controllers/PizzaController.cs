@@ -11,6 +11,8 @@ using la_mia_pizzeria_crud_mvc.Models.DataBaseModels;
 using Azure;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Text.Json;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
 {
@@ -121,6 +123,8 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             }
 
             PizzaFormModel formModel = new PizzaFormModel { Pizza = new Pizza(), PizzaCategories = pizzaCategories, Ingredients = allIngredientsSelectList };
+            
+            
             return View("Create", formModel);
         }
 
@@ -183,6 +187,8 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
                 //finally I create the pizza and I add it to the database with all the parameters it needs to store
 
+                string json = JsonSerializer.Serialize(data);
+                //Console.WriteLine(json);
                 Pizza newPizza = new()
                 {
                     Name = data.Pizza.Name,
@@ -226,7 +232,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
             try
             {
 
-                Pizza? pizzaToEdit = _myDb.Pizzas.Where(Pizza => Pizza.Name == name).Include(pizza => pizza.Ingredients).FirstOrDefault();
+                Pizza? pizzaToEdit = _myDb.Pizzas.Where(Pizza => Pizza.Name == name).Include(pizza => pizza.PizzaCategory).Include(pizza => pizza.Ingredients).FirstOrDefault();
 
                 if (pizzaToEdit == null)
                 {
@@ -317,7 +323,7 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                     return View("Update", data);
                 }
 
-                Pizza? pizzaToUpdate = _myDb.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.Ingredients).FirstOrDefault();
+                Pizza? pizzaToUpdate = _myDb.Pizzas.Where(pizza => pizza.Id == id).Include(pizza => pizza.PizzaCategory).Include(pizza => pizza.Ingredients).FirstOrDefault();
 
                 if (pizzaToUpdate != null)
                 {
