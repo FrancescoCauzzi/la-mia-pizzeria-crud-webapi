@@ -15,7 +15,8 @@ namespace la_mia_pizzeria_crud_mvc
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("PizzeriaContextConnection") ?? throw new InvalidOperationException("Connection string 'PizzeriaContextConnection' not found.");
 
-            builder.Services.AddDbContext<PizzeriaContext>();
+            builder.Services.AddDbContext<PizzeriaContext>(options =>
+                options.UseSqlServer(connectionString));
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()

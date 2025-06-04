@@ -7,16 +7,25 @@ namespace la_mia_pizzeria_crud_mvc.Database
 {
     public class PizzeriaContext : IdentityDbContext<IdentityUser>
     {
+        private readonly IConfiguration _configuration;
+
         public DbSet<Pizza> Pizzas { get; set; }
 
         public DbSet<PizzaCategory> PizzaCategories { get; set; }
 
         public DbSet<Ingredient> Ingredients { get; set; }
 
+        public PizzeriaContext(DbContextOptions<PizzeriaContext> options, IConfiguration configuration) : base(options)
+        {
+            _configuration = configuration;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=MVCEFPizzeria;" +
-            "Integrated Security=True;TrustServerCertificate=True");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("PizzeriaContextConnection"));
+            }
         }
 
     }
